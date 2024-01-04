@@ -1,0 +1,31 @@
+Metadata-Version: 2.1
+Name: QMessages
+Version: 0.0.1
+Summary: A Django app for storing and retrieving notes.
+Home-page: https://qloudyx.pt
+Author: Victor Costa
+Author-email: victor.costa@qloudyx.pt
+Project-URL: Source, https://github.com/dev-qloudyx/qimob
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Environment :: Web Environment
+Classifier: Topic :: Internet
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 3.2
+Classifier: Framework :: Django :: 4.0
+Classifier: Framework :: Django :: 4.1
+Classifier: Framework :: Django :: 4.2
+Classifier: Framework :: Django :: 5.0
+Requires-Python: >=3.7
+License-File: AUTHORS
+Requires-Dist: Django>=3.2

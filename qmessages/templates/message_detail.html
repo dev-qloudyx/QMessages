@@ -1,0 +1,12 @@
+<h1>Message Detail</h1>
+
+<div>
+    {% csrf_token %}
+    <p>Message: {{ object.text }}</p>
+    <p>Create at: {{ object.created_at }}</p>
+    <p>Updated at: {{ object.updated_at }}</p>
+</div>    
+
+
+
+

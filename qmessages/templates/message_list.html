@@ -1,0 +1,133 @@
+<h1>Message Module</h1>
+
+<h2>Sent Messages</h2>
+<ul>
+    {% for object in object_list %}
+        {% if object.sender == request.user %}
+        <li>
+            <table>
+                <tr>
+                    <th>Text</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>{{ object.text }}</td>
+                    <td>{{ object.created_at }}</td>
+                    <td>{{ object.updated_at }}</td>
+                    <td>{{ object.message_status.last.message_desc.desc }}</td>
+    
+                </tr>
+            </table>
+    
+            <a href="{% url 'qmessages:message_reply_create_view_with_token' object.token %}">Reply</a>
+            
+            {% if object.sender == request.user %}
+                <a href="{% url 'qmessages:message_update_view_with_token' object.token %}">Update</a>
+            {% endif %}
+
+            <a href="{% url 'qmessages:message_detail_view_with_token' object.token %}">Detail</a>
+
+            <a href="{% url 'qmessages:message_delete_view' object.token %}">Delete</a>
+    
+            <h2>Replies</h2>
+            {% for reply in object.messagereply_set.all %}
+                {% if not reply.parent_reply %}
+                <!-- Display the reply -->
+                <p>ID: {{ reply.id }}</p>
+                <p>Reply: {{ reply.text }}</p>
+                <p>Replier: {{ reply.replier }}</p>
+                <p>Created at: {{ reply.created_at }}</p>
+                <p>Updated at: {{ reply.updated_at }}</p>
+                <td>Status: {{ reply.message_reply_status.last.message_desc.desc }}</td>
+    
+                <a href="{% url 'qmessages:message_reply_create_view_with_token' token=object.token parent_reply=reply.id %}">Reply</a>
+    
+                {% if reply.replier == request.user %}
+                    <a href="{% url 'qmessages:message_reply_update_view' reply.pk %}">Update</a>
+                {% endif %}
+
+                <a href="{% url 'qmessages:message_detail_view_with_token_and_parent_reply' token=object.token parent_reply=reply.id %}">Detail</a>
+
+                <a href="{% url 'qmessages:message_reply_delete_view' reply.pk %}">Delete</a>
+
+                {% include 'reply_list.html' with replies=reply.messagereply_set.all %}
+                {% endif %}
+            {% empty %}
+                <li>No replies yet.</li>
+            {% endfor %}
+        </li>
+        {% endif %}
+    {% empty %}
+        <li>No sent messages found.</li>
+    {% endfor %}
+</ul>
+
+<h2>Received Messages</h2>
+<ul>
+    {% for object in object_list %}
+        {% if object.receiver == request.user %}
+        <li>
+            <table>
+                <tr>
+                    <th>Text</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>{{ object.text }}</td>
+                    <td>{{ object.created_at }}</td>
+                    <td>{{ object.updated_at }}</td>
+                    <td>{{ object.message_status.last.message_desc.desc }}</td>
+    
+                </tr>
+            </table>
+    
+           
+            <a href="{% url 'qmessages:message_reply_create_view_with_token' object.token %}">Reply</a>
+    
+           
+            {% if object.sender == request.user %}
+                <a href="{% url 'qmessages:message_update_view_with_token' object.token %}">Update</a>
+            {% endif %}
+
+            
+            <a href="{% url 'qmessages:message_detail_view_with_token' object.token %}">Detail</a>
+
+            <a href="{% url 'qmessages:message_delete_view' object.token %}">Delete</a>
+    
+            <h2>Replies</h2>
+            {% for reply in object.messagereply_set.all %}
+                {% if not reply.parent_reply %}
+                <!-- Display the reply -->
+                <p>ID: {{ reply.id }}</p>
+                <p>Reply: {{ reply.text }}</p>
+                <p>Replier: {{ reply.replier }}</p>
+                <p>Created at: {{ reply.created_at }}</p>
+                <p>Updated at: {{ reply.updated_at }}</p>
+                <td>Status: {{ reply.message_reply_status.last.message_desc.desc }}</td>
+                
+                <a href="{% url 'qmessages:message_reply_create_view_with_token' token=object.token parent_reply=reply.id %}">Reply</a>
+                
+                {% if reply.replier == request.user %}
+                    <a href="{% url 'qmessages:message_reply_update_view' reply.pk %}">Update</a>
+                {% endif %}
+
+                <a href="{% url 'qmessages:message_detail_view_with_token_and_parent_reply' token=object.token parent_reply=reply.id %}">Detail</a>
+
+                <a href="{% url 'qmessages:message_reply_delete_view' reply.pk %}">Delete</a>
+    
+                <!-- Display all child replies of this reply -->
+                {% include 'reply_list.html' with replies=reply.messagereply_set.all %}
+                {% endif %}
+            {% empty %}
+                <li>No replies yet.</li>
+            {% endfor %}
+        </li>
+        {% endif %}
+    {% empty %}
+        <li>No received messages found.</li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,4 @@
+include AUTHORS
+include README.rst
+include ChangeLog.rst
+recursive-include qmessages *.html *.txt *.xml *.po *.mo *.js

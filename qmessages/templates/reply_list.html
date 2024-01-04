@@ -1,0 +1,24 @@
+<ul>
+    {% for reply in replies %}
+        <li>
+            <p>ID: {{ reply.id }}</p>
+            <p>Reply: {{ reply.text }}</p>
+            <p>Replier: {{ reply.replier }}</p>
+            <p>Created at: {{ reply.created_at }}</p>
+            <p>Updated at: {{ reply.updated_at }}</p>
+            <td>Status: {{ reply.message_reply_status.last.message_desc.desc }}</td>
+
+            <a href="{% url 'qmessages:message_reply_create_view_with_token' token=object.token parent_reply=reply.id %}">Reply</a>
+
+            {% if reply.replier == request.user %}
+                <a href="{% url 'qmessages:message_reply_update_view' reply.pk %}">Update</a>
+            {% endif %}
+
+            <a href="{% url 'qmessages:message_detail_view_with_token_and_parent_reply' token=object.token parent_reply=reply.id %}">Detail</a>
+            
+            <a href="{% url 'qmessages:message_reply_delete_view' reply.pk %}">Delete</a>
+
+            {% include 'reply_list.html' with replies=reply.messagereply_set.all %}
+        </li>
+    {% endfor %}
+</ul>
