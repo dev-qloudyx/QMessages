@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: QMessages
-Version: 0.0.1
+Version: 0.0.2
 Summary: A Django app for storing and retrieving notes.
 Home-page: https://qloudyx.pt
 Author: Victor Costa
