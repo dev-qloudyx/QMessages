@@ -152,12 +152,12 @@ class MessageListView(LoginRequiredMixin, ListView):
             return queryset
         else:
             return queryset
-   
+    
     def get(self, request, *args, **kwargs):
         self.tokens = kwargs.get('tokens', None) or request.GET.get('tokens', None)
         self.object_list = self.get_queryset(request, *args, **kwargs)
         context = self.get_context_data(**kwargs)
-        
+
         if request.is_ajax:
             if not context['page_obj'].object_list.exists():
                 return JsonResponse({"error": 'No data found for this token'}, status=404)
@@ -168,7 +168,14 @@ class MessageListView(LoginRequiredMixin, ListView):
                 message_dict = model_to_dict(message)
                 message_dict['token'] = str(message.token)
                 message_dict['sender'] = message.sender.email
-                
+                message_dict['created_at'] = message.created_at
+                message_dict['updated_at'] = message.updated_at
+
+                # Get the latest status of the message
+                message_status = MessageStatus.objects.filter(message=message).order_by('-created_at').first()
+                if message_status:
+                    message_dict['status'] = message_status.message_desc.desc
+
                 top_level_replies = MessageReply.objects.filter(message=message, parent_reply__isnull=True)
                 reply_list = []
 
@@ -178,6 +185,11 @@ class MessageListView(LoginRequiredMixin, ListView):
                     reply_dict['updated_at'] = reply.updated_at
                     reply_dict['replier'] = reply.replier.email
 
+                    # Get the latest status of the reply
+                    reply_status = MessageReplyStatus.objects.filter(message_reply=reply).order_by('-created_at').first()
+                    if reply_status:
+                        reply_dict['status'] = reply_status.message_desc.desc
+
                     nested_replies = MessageReply.objects.filter(parent_reply=reply)
                     nested_reply_list = []
 
@@ -186,6 +198,12 @@ class MessageListView(LoginRequiredMixin, ListView):
                         nested_reply_dict['created_at'] = nested_reply.created_at
                         nested_reply_dict['updated_at'] = nested_reply.updated_at
                         nested_reply_dict['replier'] = nested_reply.replier.email
+
+                        # Get the latest status of the nested reply
+                        nested_reply_status = MessageReplyStatus.objects.filter(message_reply=nested_reply).order_by('-created_at').first()
+                        if nested_reply_status:
+                            nested_reply_dict['status'] = nested_reply_status.message_desc.desc
+
                         nested_reply_list.append(nested_reply_dict)
 
                     reply_dict['replies'] = nested_reply_list
@@ -216,6 +234,7 @@ class MessageListView(LoginRequiredMixin, ListView):
 
         else:
             return render(request, 'message_list.html', context)
+
 
 class MessageDeleteView(LoginRequiredMixin, DeleteView):
     model = Message
